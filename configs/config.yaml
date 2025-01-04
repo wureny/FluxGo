@@ -1,0 +1,27 @@
+# API网关配置
+gateway:
+  # 监听地址
+  listen_addr: ":8080"
+  # 目标服务器映射
+  targets:
+    "/api/v1": "http://localhost:8081"  # API服务器
+    "/api/v2": "http://localhost:8081"  # 同样指向示例服务器
+
+# 默认限流规则
+default_rules:
+  # API v1 的限流规则
+  "/api/v1/users":
+    algorithm: "token_bucket"
+    window_size: "1m"    # 1分钟
+    limit: 100           # 每分钟100个请求
+  
+  "/api/v1/orders":
+    algorithm: "sliding_window"
+    window_size: "1s"    # 1秒
+    limit: 10            # 每秒10个请求
+
+  # API v2 的限流规则
+  "/api/v2/products":
+    algorithm: "leaky_bucket"
+    window_size: "1m"
+    limit: 50 
